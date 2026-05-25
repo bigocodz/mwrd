@@ -49,6 +49,7 @@ export async function middleware(request: NextRequest) {
     '/signup',
     '/forgot-password',
     '/reset-password',
+    '/change-password',
     '/get-started',
     '/account-status',
     '/unauthorized',
@@ -71,7 +72,7 @@ export async function middleware(request: NextRequest) {
   // Load the profile to get role
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, status')
+    .select('role, status, must_change_password')
     .eq('user_id', user.id)
     .single()
 
@@ -79,6 +80,20 @@ export async function middleware(request: NextRequest) {
   if (!profile) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Force password change on first login
+  if (profile.must_change_password) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/change-password'
+    return NextResponse.redirect(url)
+  }
+
+  // Non-active accounts go to account-status
+  if (profile.status !== 'ACTIVE') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/account-status'
     return NextResponse.redirect(url)
   }
 
