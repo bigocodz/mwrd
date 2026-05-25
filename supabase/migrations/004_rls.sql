@@ -239,7 +239,10 @@ CREATE POLICY "qi_admin" ON quote_items FOR ALL USING (is_admin());
 ALTER TABLE quote_revision_events ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "qre_supplier" ON quote_revision_events
   FOR ALL USING (
-    supplier_id = (SELECT id FROM profiles WHERE user_id = auth.uid()) OR is_admin()
+    is_admin() OR quote_id IN (
+      SELECT id FROM quotes
+      WHERE supplier_id = (SELECT id FROM profiles WHERE user_id = auth.uid())
+    )
   );
 CREATE POLICY "qre_client" ON quote_revision_events
   FOR SELECT USING (
@@ -595,8 +598,3 @@ CREATE POLICY "leads_admin" ON interest_submissions FOR ALL USING (is_admin());
 CREATE POLICY "leads_public_insert" ON interest_submissions
   FOR INSERT WITH CHECK (TRUE);
 
--- ============================================================
--- PAYMENT AUDIT LOGS
--- ============================================================
-ALTER TABLE payment_audit_logs ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "pal_admin_all" ON payment_audit_logs FOR ALL USING (is_admin());

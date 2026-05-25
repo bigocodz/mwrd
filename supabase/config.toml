@@ -28,7 +28,6 @@ max_client_conn = 100
 [realtime]
 enabled = true
 ip_version = "IPv4"
-heartbeat_interval_ms = 30000
 max_header_length = 4096
 
 [studio]
@@ -71,8 +70,8 @@ max_frequency = "1s"
 [auth.email.smtp]
 host = "inbucket"
 port = 2500
-user = ""
-pass = ""
+user = "admin"
+pass = "admin"
 admin_email = "admin@mwrd.local"
 sender_name = "MWRD Connect"
 

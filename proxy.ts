@@ -12,7 +12,7 @@ import { NextResponse, type NextRequest } from 'next/server'
  * - Unauthenticated users are redirected to /login.
  * - Wrong-role users are redirected to /unauthorized.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
