@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectOption } from '@/components/ui/select'
 import { ProductStatusBadge } from '@/components/shared/StatusBadge'
+import { ImageListUpload } from '@/components/ui/FileUpload'
 import type { Database } from '@/lib/supabase/types'
 
 type Product = Database['public']['Tables']['products']['Row']
@@ -47,6 +48,7 @@ export default function SupplierEditProductPage() {
   const [leadTime, setLeadTime] = useState('7')
   const [availability, setAvailability] = useState<'AVAILABLE' | 'LIMITED_STOCK' | 'OUT_OF_STOCK'>('AVAILABLE')
   const [autoQuote, setAutoQuote] = useState(false)
+  const [images, setImages] = useState<string[]>([])
 
   useEffect(() => {
     if (!id || !orgId) return
@@ -66,6 +68,7 @@ export default function SupplierEditProductPage() {
           setLeadTime(String(data.lead_time_days))
           setAvailability(data.availability_status)
           setAutoQuote(data.auto_quote ?? false)
+          setImages(data.images ?? [])
         }
         setLoading(false)
       })
@@ -85,6 +88,7 @@ export default function SupplierEditProductPage() {
         lead_time_days: parseInt(leadTime) || 7,
         availability_status: availability,
         auto_quote: autoQuote,
+        images,
         approval_status: 'PENDING',
       })
       .eq('id', product.id)
@@ -210,6 +214,18 @@ export default function SupplierEditProductPage() {
                 <span className="text-sm text-gray-700">Enable auto-quote</span>
               </label>
             </div>
+            {orgId && (
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label>Product Images</Label>
+                <ImageListUpload
+                  bucket="product-images"
+                  path={orgId}
+                  images={images}
+                  onChange={setImages}
+                  maxImages={8}
+                />
+              </div>
+            )}
           </div>
         </Panel>
 

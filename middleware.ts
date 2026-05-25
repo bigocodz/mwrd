@@ -124,15 +124,15 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Root redirect — send logged-in users to their portal
+  // Root redirect — send logged-in users to their portal home
   if (pathname === '/') {
     const url = request.nextUrl.clone()
     url.pathname =
       role === 'ADMIN' || role === 'AUDITOR'
         ? '/admin/dashboard'
         : role === 'CLIENT'
-          ? '/client/dashboard'
-          : '/supplier/dashboard'
+          ? '/client'
+          : '/supplier'
     return NextResponse.redirect(url)
   }
 

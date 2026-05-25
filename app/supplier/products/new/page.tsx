@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectOption } from '@/components/ui/select'
+import { ImageListUpload } from '@/components/ui/FileUpload'
 
 const CATEGORIES = [
   'Office Supplies',
@@ -38,6 +39,7 @@ export default function SupplierNewProductPage() {
   const [leadTime, setLeadTime] = useState('7')
   const [availability, setAvailability] = useState<'AVAILABLE' | 'LIMITED_STOCK' | 'OUT_OF_STOCK'>('AVAILABLE')
   const [autoQuote, setAutoQuote] = useState(false)
+  const [images, setImages] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,7 +62,7 @@ export default function SupplierNewProductPage() {
           availability_status: availability,
           approval_status: 'PENDING',
           auto_quote: autoQuote,
-          images: [],
+          images,
         })
         .select()
         .single()
@@ -175,6 +177,18 @@ export default function SupplierNewProductPage() {
                 </span>
               </label>
             </div>
+            {orgId && (
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label>Product Images</Label>
+                <ImageListUpload
+                  bucket="product-images"
+                  path={orgId}
+                  images={images}
+                  onChange={setImages}
+                  maxImages={8}
+                />
+              </div>
+            )}
           </div>
         </Panel>
 

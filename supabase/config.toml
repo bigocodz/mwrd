@@ -85,17 +85,42 @@ policy = "oneshot"
 inspector_port = 8083
 
 # ============================================================
-# Scheduled Edge Functions (replacing Convex cronJobs)
-# These hit Edge Function endpoints on a schedule.
-# On Supabase Free, use an external cron (cron-job.org) pointing
-# to the function URLs, or upgrade to Pro for pg_cron.
+# Edge Functions
+# Deploy all with: supabase functions deploy
 # ============================================================
 
-# [functions.scheduled-auto-quote]
-# verify_jwt = true
+[functions.auto-quote]
+verify_jwt = true
 
-# [functions.scheduled-invoices]
-# verify_jwt = true
+[functions.notify]
+verify_jwt = true
+
+[functions.approvals]
+verify_jwt = true
+
+[functions.submit-lead]
+# Public endpoint — no JWT required
+verify_jwt = false
+
+[functions.cron]
+# Called by pg_cron with service role key
+verify_jwt = true
+
+[functions.wafeq]
+verify_jwt = true
+
+[functions.wathq]
+verify_jwt = true
+
+[functions.spl]
+verify_jwt = true
+
+[functions.document-renderer]
+verify_jwt = true
+
+[functions.wafeq-webhook]
+# Called by Wafeq webhook — validated by X-Wafeq-Signature header
+verify_jwt = false
 
 [analytics]
 enabled = false
